@@ -1964,3 +1964,24 @@ Movement.RelocationVmapsCheckDelay = 0
 # Sanction applied to a player if sending too many packets
 # - By default: Kick
 Antiflood.Sanction = 4
+
+##########################
+#    Fake.WHO.List
+#        Add fake players to fill in WHO LIST (who is online list, "O" button) if there is less then
+#        49 real players online (need to set online=2 in character database in order to work)
+#        Default: 0 (disabled)
+#                 1 (enabled)
+# Rate.XP.HORDE    = 1 x rate for horde compare to aliance，usefule to balance the server at beginning
+# formula Horde = base rate * rate.xp.kill/quest/explorer * Rate.XP.HORDE
+# formula alliance = base rate * rate.xp.kill/quest/explorer 
+# pet will not be considered for the xp rate
+# 
+# 
+# 
+# World.Announce.Cost 
+#    cost for sending world chat, default 100 copper(1 silver)
+# 
+###################################################################################################################
+Fake.Who.List = 0
+Rate.XP.HORDE    = 10
+World.Announce.Cost = 1000

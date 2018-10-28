@@ -358,7 +358,8 @@ bool ChatHandler::HandleWorldCast( char* args)
 {
 	if (!*args)// (!*args || m_session->GetPlayer()->GetMoney() < 1000)
 		return false;
-	if (m_session->GetPlayer()->GetMoney() < 1000)
+	uint32 ChatCost = sWorld.getConfig(CONFIG_UINT32_WORLD_CHAT_COST);
+	if (m_session->GetPlayer()->GetMoney() < ChatCost)
 	{
 		m_session->GetPlayer()->GetSession()->SendNotification("金币余额不足");
 	}
@@ -369,8 +370,8 @@ bool ChatHandler::HandleWorldCast( char* args)
 		str += "|r]:";
 		str += args;
 		sWorld.SendGlobalText(str.c_str(), NULL);
-		m_session->GetPlayer()->ModifyMoney(int32(-1000));
-		m_session->GetPlayer()->GetSession()->SendNotification("世界频道广播已经发送,扣除费用10银币");//世界頻道廣播已經發送,扣取費用一金幣!
+		m_session->GetPlayer()->ModifyMoney(int32(0 - ChatCost));
+		m_session->GetPlayer()->GetSession()->SendNotification("世界频道广播已经发送,扣除费用 %u 铜币", ChatCost);//世界頻道廣播已經發送,扣取費用一金幣!
 	}
 	return true;
 }

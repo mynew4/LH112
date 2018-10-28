@@ -459,7 +459,7 @@ void World::LoadConfigSettings(bool reload)
     setConfig(CONFIG_FLOAT_RATE_XP_KILL,    "Rate.XP.Kill",    1.0f);
     setConfig(CONFIG_FLOAT_RATE_XP_QUEST,   "Rate.XP.Quest",   1.0f);
     setConfig(CONFIG_FLOAT_RATE_XP_EXPLORE, "Rate.XP.Explore", 1.0f);
-	setConfig(CONFIG_FLOAT_RATE_XP_HORDE, "Rate.XP.HORDE", 1.0f);
+	
     setConfig(CONFIG_FLOAT_RATE_REPUTATION_GAIN,           "Rate.Reputation.Gain", 1.0f);
     setConfig(CONFIG_FLOAT_RATE_REPUTATION_LOWLEVEL_KILL,  "Rate.Reputation.LowLevel.Kill", 1.0f);
     setConfig(CONFIG_FLOAT_RATE_REPUTATION_LOWLEVEL_QUEST, "Rate.Reputation.LowLevel.Quest", 1.0f);
@@ -551,6 +551,10 @@ void World::LoadConfigSettings(bool reload)
     setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_ADD_FRIEND,          "AllowTwoSide.AddFriend", false);
 	//fake who list
 	setConfig(CONFIG_BOOL_FAKE_WHO_LIST,                      "Fake.WHO.List", true);
+	//hord xp rate compare to other
+	setConfig(CONFIG_FLOAT_RATE_XP_HORDE, "Rate.XP.HORDE", 1.0f);
+	//world announce cost
+	setConfig(CONFIG_UINT32_WORLD_CHAT_COST, "World.Announce.Cost", 100);
 
     setConfig(CONFIG_UINT32_STRICT_PLAYER_NAMES,  "StrictPlayerNames",  0);
     setConfig(CONFIG_UINT32_STRICT_CHARTER_NAMES, "StrictCharterNames", 0);
