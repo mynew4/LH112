@@ -353,3 +353,34 @@ bool ChatHandler::HandleWhisperRestrictionCommand(char* args)
     PSendSysMessage("Whisper restriction is %s", value ? "ON" : "OFF");
     return false;
 }
+
+bool ChatHandler::HandleWorldCast( char* args)
+{
+	if (!*args)// (!*args || m_session->GetPlayer()->GetMoney() < 1000)
+		return false;
+	if (m_session->GetPlayer()->GetMoney() < 1000)
+	{
+		m_session->GetPlayer()->GetSession()->SendNotification("金币余额不足");
+	}
+		
+	else {
+		std::string str = "|cfff0ff00[世界頻道][|r";//"|cfff0ff00[世界頻道][|r"
+		str += m_session->GetPlayerName();
+		str += "|r]:";
+		str += args;
+		sWorld.SendGlobalText(str.c_str(), NULL);
+		m_session->GetPlayer()->ModifyMoney(int32(-1000));
+		m_session->GetPlayer()->GetSession()->SendNotification("世界频道广播已经发送,扣除费用10银币");//世界頻道廣播已經發送,扣取費用一金幣!
+	}
+	return true;
+}
+
+//// global announce format for referece
+//bool ChatHandler::HandleAnnounceCommand(char* args)
+//{
+//	if (!*args)
+//		return false;
+//
+//	sWorld.SendWorldText(LANG_SYSTEMMESSAGE, args);
+//	return true;
+//}

@@ -1044,6 +1044,9 @@ ChatCommand * ChatHandler::getCommandTable()
         { NODE, "aura",           SEC_DEVELOPPER,  false, &ChatHandler::HandleAuraCommand,                "", nullptr },
         { NODE, "unaura",         SEC_MODERATOR_CONF,  false, &ChatHandler::HandleUnAuraCommand,              "", nullptr },
         { NODE, "announce",       SEC_BASIC_ADMIN,      true,  &ChatHandler::HandleAnnounceCommand,            "", nullptr },
+		//world chat
+		{ NODE, "sj",       SEC_PLAYER,         true,  &ChatHandler::HandleWorldCast,            "", nullptr },
+
         { NODE, "notify",         SEC_ADMINISTRATOR,      true,  &ChatHandler::HandleNotifyCommand,              "", nullptr },
         { NODE, "goname",         SEC_MODERATOR_CONF,      false, &ChatHandler::HandleGonameCommand,              "", nullptr },
         { NODE, "namego",         SEC_MODERATOR_CONF,      false, &ChatHandler::HandleNamegoCommand,              "", nullptr },
@@ -1123,6 +1126,8 @@ ChatCommand * ChatHandler::getCommandTable()
         { MSTR, "spamer",         SEC_MODERATOR_CONF,     true, nullptr,                                           "", spamerCommandTable },
         { MSTR, "antispam",       SEC_GAMEMASTER,     true, nullptr,                                           "", AntiSpamCommandTable },
         { MSTR, "gold",           SEC_GAMEMASTER,     true, nullptr,                                           "", goldCommandTable },
+		
+
         { MSTR, nullptr,       0,                  false, nullptr,                                           "", nullptr }
     };
 
