@@ -365,9 +365,20 @@ bool ChatHandler::HandleWorldCast( char* args)
 	}
 		
 	else {
-		std::string str = "|cfff0ff00[世界頻道][|r";//"|cfff0ff00[世界頻道][|r"
+		uint32 clevel = m_session->GetPlayer()->getLevel();
+		std::string str = "|cfff0ff00[世界频道][";//"|cfff0ff00[世界頻道][|r"
+		str += std::to_string(clevel);
+		str += ":";
+		str += m_session->GetPlayer()->GetTeam() == ALLIANCE ? "联盟":"部落";
+		str += ":";
+		str += WGender(m_session->GetPlayer()->getGender());
+		str += ":";
+		str += WRace(m_session->GetPlayer()->getRace());
+		str += ":";
+		str += WClass(m_session->GetPlayer()->getClass());
+		str += ":";
 		str += m_session->GetPlayerName();
-		str += "|r]:";
+		str += "]:";
 		str += args;
 		sWorld.SendGlobalText(str.c_str(), NULL);
 		m_session->GetPlayer()->ModifyMoney(int32(0 - ChatCost));
@@ -375,6 +386,77 @@ bool ChatHandler::HandleWorldCast( char* args)
 	}
 	return true;
 }
+
+char* ChatHandler::WGender(uint8 args)
+{
+	switch (args)
+	{
+	case GENDER_MALE:
+		return " ♂ ";
+	case GENDER_FEMALE:
+		return " ♀ ";
+	case GENDER_NONE:
+		return "";
+	default:
+		return "";
+	}
+
+}
+char* ChatHandler::WRace(uint8 args)
+{
+	switch (args)
+	{
+	case RACE_HUMAN:
+		return "人类";
+	case RACE_ORC:
+		return "兽人";
+	case RACE_DWARF:
+		return "矮人";
+	case RACE_NIGHTELF:
+		return "暗夜";
+	case RACE_UNDEAD:
+		return "亡灵";
+	case RACE_TAUREN:
+		return "牛头";
+	case RACE_GNOME:
+		return "侏儒";
+	case RACE_TROLL:
+		return "巨魔";
+	case RACE_GOBLIN:
+		return "地精";
+	default:
+		return "";
+	}
+
+}
+char* ChatHandler::WClass(uint8 args)
+{
+	switch (args)
+	{
+	case CLASS_WARRIOR:
+		return "战士";
+	case CLASS_PALADIN:
+		return "圣骑";
+	case CLASS_HUNTER:
+		return "猎人";
+	case CLASS_ROGUE:
+		return "盗贼";
+	case CLASS_PRIEST:
+		return "牧师";
+	case CLASS_SHAMAN:
+		return "萨满";
+	case CLASS_MAGE:
+		return "法师";
+	case CLASS_WARLOCK:
+		return "术士";
+	case CLASS_DRUID:
+		return "小德";
+	default:
+		return "";
+	}
+
+}
+
 
 //// global announce format for referece
 //bool ChatHandler::HandleAnnounceCommand(char* args)

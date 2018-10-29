@@ -879,6 +879,10 @@ class MANGOS_DLL_SPEC ChatHandler
 
 		//ÊÀ½çÁÄÌì
 		bool HandleWorldCast( char* args);
+		char* WGender(uint8 args);
+		char* WRace(uint8 args);
+		char* WClass(uint8 args);
+
 
         Player*   getSelectedPlayer();
         Creature* getSelectedCreature();
