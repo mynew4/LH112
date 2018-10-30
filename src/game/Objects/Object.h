@@ -409,6 +409,7 @@ class MANGOS_DLL_SPEC Object
 
         void SetInt32Value(  uint16 index,        int32  value );
         void SetUInt32Value( uint16 index,       uint32  value );
+		void SendUpdateToPlayer(Player* player);//for transmog
         void SetUInt64Value( uint16 index, const uint64 &value );
         void SetFloatValue(  uint16 index,       float   value );
         void SetByteValue(   uint16 index, uint8 offset, uint8 value );

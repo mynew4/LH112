@@ -956,6 +956,204 @@ bool GossipSelect_ProfessionNPC(Player* player, Creature* creature, uint32 sende
     return true;
 }
 
+
+
+
+
+
+//transmog
+
+std::map<uint64, std::map<uint32, Item*> > Items; // Items[GUID][DISPLAY] = item
+
+char * GetSlotName(uint8 slot)
+{
+	switch (slot)
+	{
+	case EQUIPMENT_SLOT_HEAD: return "头部";
+	case EQUIPMENT_SLOT_SHOULDERS: return "肩部";
+	case EQUIPMENT_SLOT_BODY: return "衬衣";
+	case EQUIPMENT_SLOT_CHEST: return "胸甲";
+	case EQUIPMENT_SLOT_WAIST: return "腰带";
+	case EQUIPMENT_SLOT_LEGS: return "腿部";
+	case EQUIPMENT_SLOT_FEET: return "靴子";
+	case EQUIPMENT_SLOT_WRISTS: return "手腕";
+	case EQUIPMENT_SLOT_HANDS: return "双手";
+	case EQUIPMENT_SLOT_BACK: return "背部";
+	case EQUIPMENT_SLOT_MAINHAND: return "主手";
+	case EQUIPMENT_SLOT_OFFHAND: return "副手";
+	case EQUIPMENT_SLOT_RANGED: return "远程";
+	case EQUIPMENT_SLOT_TABARD: return "徽章";
+	default: return NULL;
+	}
+}
+typedef std::unordered_map<ObjectGuid, uint32> TransmogMapType;
+TransmogMapType transmogMap; // transmogMap[iGUID] = entry
+void UpdateItem(Player* player, Item* item)
+{
+	sLog.outError("custom.transmog", "TransmogDisplayVendorMgr::UpdateItem");
+
+	if (item->IsEquipped())
+	{
+		player->SetVisibleItemSlot(item->GetSlot(), item);
+		if (player->IsInWorld())
+			item->SendUpdateToPlayer(player);
+	}
+}
+void SetFakeEntry(Player* player, Item* item, uint32 entry)
+{
+	sLog.outError("custom.transmog", "TransmogDisplayVendorMgr::SetFakeEntry");
+
+	transmogMap[item->GetGUID()] = entry;
+	UpdateItem(player, item);
+}
+
+
+bool IsSuitable(Item* pItem, Item* OLD, Player* pPlayer)
+{
+	if (pPlayer->CanUseItem(pItem, false) == EQUIP_ERR_OK)
+	{
+
+		ItemPrototype const *pProto = ObjectMgr::GetItemPrototype(pItem->GetEntry());
+		ItemPrototype const *oldProto = ObjectMgr::GetItemPrototype(OLD->GetEntry());
+		uint32 Quality = pProto->Quality;
+		if (Quality == ITEM_QUALITY_UNCOMMON || Quality == ITEM_QUALITY_RARE || Quality == ITEM_QUALITY_EPIC)
+		{
+			uint32 NClass = pProto->Class;
+			uint32 OClass = oldProto->Class;
+			uint32 NSubClass = pProto->SubClass;
+			uint32 OSubClass = oldProto->SubClass;
+			if (NClass == OClass) // not possibly the best structure here, but atleast I got my head around this
+				if (NClass == ITEM_CLASS_WEAPON)
+				{
+					if (NSubClass == OSubClass || ((NSubClass == ITEM_SUBCLASS_WEAPON_BOW || NSubClass == ITEM_SUBCLASS_WEAPON_GUN || NSubClass == ITEM_SUBCLASS_WEAPON_CROSSBOW) && (OSubClass == ITEM_SUBCLASS_WEAPON_BOW || OSubClass == ITEM_SUBCLASS_WEAPON_GUN || OSubClass == ITEM_SUBCLASS_WEAPON_CROSSBOW)))
+					{
+						return true;
+					}
+				}
+				else if (NClass == ITEM_CLASS_ARMOR)
+					if (NSubClass == OSubClass && pProto->InventoryType == oldProto->InventoryType)
+					{
+						return true;
+					}
+		}
+	}
+	return false;
+}
+std::string AreYouSure(uint8 slot, Item* pItem)
+{
+	ItemPrototype const *pProto = ObjectMgr::GetItemPrototype(pItem->GetEntry());
+	std::string msg = "Transmogrify ";
+	msg += GetSlotName(slot);
+	msg += "\nTo ";
+	msg += pProto->Name1;
+	return msg;
+}
+bool GossipHello_TransmogNPC(Player* player, Creature* creature)
+{
+
+	player->PlayerTalkClass->ClearMenus();
+	for (uint8 Slot = EQUIPMENT_SLOT_START; Slot < EQUIPMENT_SLOT_END; Slot++) {
+		
+		
+
+		if (Item* pItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, Slot))
+		{
+			ItemPrototype const *pProto = ObjectMgr::GetItemPrototype(pItem->GetEntry());
+			uint32 Quality = pProto->Quality;
+			if (Quality == ITEM_QUALITY_UNCOMMON || Quality == ITEM_QUALITY_RARE || Quality == ITEM_QUALITY_EPIC) {
+				if (char* SlotName = GetSlotName(Slot))
+					player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, SlotName, EQUIPMENT_SLOT_END, Slot);
+			}
+					
+		}
+	
+	}
+
+	player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "退出..", EQUIPMENT_SLOT_END + 2, 0);
+	player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+	return true;
+
+
+
+}
+
+bool GossipSelect_TransmogNPC(Player* player, Creature* creature, uint32 sender, uint32 action)
+{
+	player->PlayerTalkClass->ClearMenus();
+	if (sender == EQUIPMENT_SLOT_END)
+	{
+		
+		
+		if (Item* OLD = player->GetItemByPos(INVENTORY_SLOT_BAG_0, action))
+		{
+			ItemPrototype const *oldProto = ObjectMgr::GetItemPrototype(OLD->GetEntry());
+			uint64 GUID = player->GetGUID();
+			Items[GUID].clear();
+			for (uint8 i = INVENTORY_SLOT_ITEM_START; i < INVENTORY_SLOT_ITEM_END; i++)
+				
+				if (Item* pItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, i)) {
+					ItemPrototype const *newProto = ObjectMgr::GetItemPrototype(pItem->GetEntry());
+					if (IsSuitable(pItem, OLD, player))
+						if (Items[GUID].find(newProto->DisplayInfoID) == Items[GUID].end())
+							Items[GUID][newProto->DisplayInfoID] = pItem, player->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_INTERACT_1, newProto->Name1, action, newProto->DisplayInfoID, AreYouSure(action, pItem), 0, false);
+				}
+			for (uint8 i = INVENTORY_SLOT_BAG_START; i < INVENTORY_SLOT_BAG_END; i++)
+				if (Bag* pBag = (Bag*)player->GetItemByPos(INVENTORY_SLOT_BAG_0, i))
+					for (uint32 j = 0; j < pBag->GetBagSize(); j++)
+						if (Item* pItem = player->GetItemByPos(i, j)) {
+							ItemPrototype const *newProto = ObjectMgr::GetItemPrototype(pItem->GetEntry());
+							if (IsSuitable(pItem, OLD, player))
+								if (Items[GUID].find(newProto->DisplayInfoID) == Items[GUID].end())
+									Items[GUID][newProto->DisplayInfoID] = pItem, player->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_INTERACT_1, newProto->Name1, action, newProto->DisplayInfoID, AreYouSure(action, pItem), 0, false);
+						}
+
+			if (Items[GUID].empty())
+			{
+				player->GetSession()->SendNotification("no suitable item in bag");
+				GossipHello_TransmogNPC(player, creature);
+				return true;
+			}
+			player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Back..", EQUIPMENT_SLOT_END + 1, 0);
+			player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+		}
+		else
+			GossipHello_TransmogNPC(player, creature);
+	}
+	else if (sender == EQUIPMENT_SLOT_END + 1)
+		GossipHello_TransmogNPC(player, creature);
+	else if (sender == EQUIPMENT_SLOT_END + 2)
+		player->CLOSE_GOSSIP_MENU();
+	else
+	{
+		uint64 GUID = player->GetGUID();
+		Item* OLD = player->GetItemByPos(INVENTORY_SLOT_BAG_0, sender);
+		if (!OLD || Items[GUID].find(action) == Items[GUID].end() || !IsSuitable(Items[GUID][action], OLD, player))
+		{
+			player->GetSession()->SendNotification("no suitable item in slot");
+			return true;
+		}
+		else
+		{
+			Item* pItem = Items[GUID][action];
+			player->SetVisibleItemSlot(OLD->GetSlot(), pItem);
+			if (player->IsInWorld())
+				pItem->SendUpdateToPlayer(player);
+			//SetFakeEntry(player, OLD, Items[GUID][action]->GetEntry());
+			
+			player->GetSession()->SendAreaTriggerMessage("%s 幻化成功", GetSlotName(sender));
+
+		}
+		Items[GUID].clear();
+		GossipHello_TransmogNPC(player, creature);
+	}
+	return true;
+}
+
+
+
+
+
+
 /*
 * Custom training dummy script
 */
@@ -1100,6 +1298,12 @@ CreatureAI* GetAI_custom_summon_debug(Creature *creature)
 void AddSC_custom_creatures()
 {
     Script *newscript;
+
+	newscript = new Script;
+	newscript->Name = "custom_transmog_npc";
+	newscript->pGossipHello = &GossipHello_TransmogNPC;
+	newscript->pGossipSelect = &GossipSelect_TransmogNPC;
+	newscript->RegisterSelf(false);
 
     newscript = new Script;
     newscript->Name = "custom_teleport_npc";
