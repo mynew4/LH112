@@ -1980,8 +1980,10 @@ Antiflood.Sanction = 4
 # 
 # World.Announce.Cost 
 #    cost for sending world chat, default 100 copper(1 silver)
-# 
+# DualSpecTimeDelta 
+# 	time duration to switch dual talent, dual spec command .swapspec
 ###################################################################################################################
 Fake.Who.List = 0
 Rate.XP.HORDE    = 10
 World.Announce.Cost = 1000
+DualSpecTimeDelta = 300

@@ -555,6 +555,8 @@ void World::LoadConfigSettings(bool reload)
 	setConfig(CONFIG_FLOAT_RATE_XP_HORDE, "Rate.XP.HORDE", 1.0f);
 	//world announce cost
 	setConfig(CONFIG_UINT32_WORLD_CHAT_COST, "World.Announce.Cost", 100);
+	//dual spec
+	setConfig(CONFIG_DUAL_SPEC_TIME_DELTA, "DualSpecTimeDelta", 300);
 
     setConfig(CONFIG_UINT32_STRICT_PLAYER_NAMES,  "StrictPlayerNames",  0);
     setConfig(CONFIG_UINT32_STRICT_CHARTER_NAMES, "StrictCharterNames", 0);

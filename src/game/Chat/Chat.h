@@ -877,13 +877,13 @@ class MANGOS_DLL_SPEC ChatHandler
         //#INFO: Giperion was here
         bool HandleDebugShowNearestGOInfo(char* args);
 
-		// ¿ΩÁ¡ƒÃÏ
+		//world message
 		bool HandleWorldCast( char* args);
 		char* WGender(uint8 args);
 		char* WRace(uint8 args);
 		char* WClass(uint8 args);
-
-
+		//dual spec
+		bool HandleSwapSpec( char* args);
         Player*   getSelectedPlayer();
         Creature* getSelectedCreature();
         Unit*     getSelectedUnit();

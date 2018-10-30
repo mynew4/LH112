@@ -467,3 +467,25 @@ char* ChatHandler::WClass(uint8 args)
 //	sWorld.SendWorldText(LANG_SYSTEMMESSAGE, args);
 //	return true;
 //}
+
+
+//dual spec
+bool ChatHandler::HandleSwapSpec( char* /*args*/)
+{
+	uint32 res = m_session->GetPlayer()->SwapSpec();
+	switch (res) {
+	case 3: {
+		PSendSysMessage("Oh, wait a bit, please!");
+		break;
+	}
+	case 2: {
+		PSendSysMessage("Too low level");
+		break;
+	}
+	case 1: {
+		PSendSysMessage("Swapped!");
+		break;
+	}
+	}
+	return true;
+}

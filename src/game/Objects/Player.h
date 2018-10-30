@@ -1519,6 +1519,13 @@ class MANGOS_DLL_SPEC Player final: public Unit
         uint32 m_petEntry;
         uint32 m_petSpell;
 
+		//Second spec info
+		typedef std::list<uint32> SpellIDList;
+		SpellIDList m_altspec_talents;
+		//ActionButtonList m_altspec_actionButtons;
+		time_t m_altspec_lastswap;
+
+
         void AutoReSummonPet();
 
         uint32 getCinematic() { return m_cinematic; }
@@ -2222,7 +2229,8 @@ class MANGOS_DLL_SPEC Player final: public Unit
         PlayerTaxi const& GetTaxi() const { return m_taxi; }
         uint32 GetHomeBindMap() const { return m_homebindMapId; }
         uint16 GetHomeBindAreaId() const { return m_homebindAreaId; }
-
+		//dual spec
+		uint32 SwapSpec();
     protected:
         uint32 m_contestedPvPTimer;
 
@@ -2275,6 +2283,10 @@ class MANGOS_DLL_SPEC Player final: public Unit
         void _LoadFriendList(QueryResult *result);
         bool _LoadHomeBind(QueryResult *result);
         void _LoadBGData(QueryResult* result);
+		//dual spec
+		void _LoadAlternativeSpec();
+		
+
         void _LoadIntoDataField(const char* data, uint32 startOffset, uint32 count);
         void _LoadGuild(QueryResult* result);
 
@@ -2290,8 +2302,10 @@ class MANGOS_DLL_SPEC Player final: public Unit
         void _SaveSkills();
         void _SaveSpells();
         void _SaveBGData();
-        void _SaveStats();
+		//dual spec
+		void _SaveAlternativeSpec();
 
+        void _SaveStats();
         void _SetCreateBits(UpdateMask *updateMask, Player *target) const;
         void _SetUpdateBits(UpdateMask *updateMask, Player *target) const;
 

@@ -267,7 +267,12 @@ enum eConfigUInt32Values
     CONFIG_UINT32_ACCOUNT_CONCURRENT_AUCTION_LIMIT,
 	//world announce cost
 	CONFIG_UINT32_WORLD_CHAT_COST,
+	//dual spec
+	CONFIG_DUAL_SPEC_TIME_DELTA,
+
     CONFIG_UINT32_VALUE_COUNT
+	
+	
 };
 
 enum WowPatch
