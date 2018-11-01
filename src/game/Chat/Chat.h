@@ -879,11 +879,15 @@ class MANGOS_DLL_SPEC ChatHandler
 
 		//world message
 		bool HandleWorldCast( char* args);
+<<<<<<< HEAD
 		char* WGender(uint8 args);
 		char* WRace(uint8 args);
 		char* WClass(uint8 args);
 		//dual spec
 		bool HandleSwapSpec( char* args);
+=======
+
+>>>>>>> parent of f217172... add Level Gender Race Class info to the char while sending world message
         Player*   getSelectedPlayer();
         Creature* getSelectedCreature();
         Unit*     getSelectedUnit();
