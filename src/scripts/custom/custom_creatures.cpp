@@ -1060,10 +1060,10 @@ bool GossipHello_TransmogNPC(Player* player, Creature* creature)
 		{
 			ItemPrototype const *pProto = ObjectMgr::GetItemPrototype(pItem->GetEntry());
 			uint32 Quality = pProto->Quality;
-			if (Quality == ITEM_QUALITY_UNCOMMON || Quality == ITEM_QUALITY_RARE || Quality == ITEM_QUALITY_EPIC) {
+			//if (Quality == ITEM_QUALITY_UNCOMMON || Quality == ITEM_QUALITY_RARE || Quality == ITEM_QUALITY_EPIC) {
 				if (char* SlotName = GetSlotName(Slot))
 					player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, SlotName, EQUIPMENT_SLOT_END, Slot);
-			}
+			//}
 					
 		}
 	
