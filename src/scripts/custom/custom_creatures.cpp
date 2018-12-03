@@ -205,6 +205,7 @@ void SendDefaultMenu_TeleportNPC(Player *player, Creature *_Creature, uint32 act
 			player->ADD_GOSSIP_ITEM(0, " 地铁海底", GOSSIP_SENDER_MAIN, 642);
 			player->ADD_GOSSIP_ITEM(0, " 旧铁炉堡", GOSSIP_SENDER_MAIN, 643);
 			player->ADD_GOSSIP_ITEM(0, " 巨石水坝", GOSSIP_SENDER_MAIN, 644);
+			player->ADD_GOSSIP_ITEM(0, " 迷宫探险", GOSSIP_SENDER_MAIN, 645);
 			player->ADD_GOSSIP_ITEM(0, " [返回]", GOSSIP_SENDER_MAIN, 100);
 			player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, _Creature->GetGUID());
 			
@@ -685,6 +686,11 @@ void SendDefaultMenu_TeleportNPC(Player *player, Creature *_Creature, uint32 act
 			//巨石水坝 統一格式說明：(MapID, X, Y, Z, 0); .go -1749 471 0.85 36
 			player->CLOSE_GOSSIP_MENU();
 			player->TeleportTo(0, -4717.5, -3389.22, 322.53, 1.69);
+			break;
+		case 645:
+			//迷宫探险 統一格式說明：(MapID, X, Y, Z, 0); .go -1749 471 0.85 36
+			player->CLOSE_GOSSIP_MENU();
+			player->TeleportTo(0, -7398.118164, 795.607544, 131.408005, 1.69);
 			break;
         case 100: // Main Menu
             // HORDE
